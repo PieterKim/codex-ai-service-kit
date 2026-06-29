@@ -128,10 +128,19 @@ codex-ai-service-kit/
 ## 5. 설치 방법
 
 아래 명령으로 저장소를 복제합니다.
-
+Windows PowerShell:
 ```bash
 git clone https://github.com/PieterKim/codex-ai-service-kit.git
 cd codex-ai-service-kit
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
+```
+
+macOS/Linux:
+```bash
+git clone https://github.com/PieterKim/codex-ai-service-kit.git
+cd codex-ai-service-kit
+chmod +x scripts/install.sh
+./scripts/install.sh
 ```
 
 아직 GitHub에 업로드하기 전이라면, 로컬에서 다음과 같이 새 저장소로 사용할 수 있습니다.
