@@ -130,7 +130,7 @@ codex-ai-service-kit/
 아래 명령으로 저장소를 복제합니다.
 
 ```bash
-git clone https://github.com/your-org/codex-ai-service-kit.git
+git clone https://github.com/PieterKim/codex-ai-service-kit.git
 cd codex-ai-service-kit
 ```
 
