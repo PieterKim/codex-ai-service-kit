@@ -37,9 +37,6 @@ info "설치 위치: $CODEX_DIR"
 mkdir -p "$CODEX_DIR"
 success "~/.codex 폴더를 준비했습니다."
 
-mkdir -p "$CODEX_DIR/skills"
-success "~/.codex/skills 폴더를 준비했습니다."
-
 SOURCE_AGENTS_FILE="$REPO_ROOT/AGENTS.md"
 TARGET_AGENTS_FILE="$CODEX_DIR/AGENTS.md"
 
@@ -57,13 +54,28 @@ fi
 cp "$SOURCE_AGENTS_FILE" "$TARGET_AGENTS_FILE"
 success "AGENTS.md 파일을 설치했습니다."
 
-for directory_name in agents skills config; do
+DIRECTORIES_TO_COPY=(
+  "agents"
+  "skills"
+  "config"
+  "prompts"
+  "templates"
+  "docs"
+)
+
+for directory_name in "${DIRECTORIES_TO_COPY[@]}"; do
   source_dir="$REPO_ROOT/$directory_name"
   target_dir="$CODEX_DIR/$directory_name"
 
   if [ ! -d "$source_dir" ]; then
     fail "원본 폴더를 찾을 수 없습니다: $source_dir"
     exit 1
+  fi
+
+  if [ -d "$target_dir" ]; then
+    BACKUP_DIR="$CODEX_DIR/${directory_name}.backup.$TIMESTAMP"
+    cp -R "$target_dir" "$BACKUP_DIR"
+    success "기존 ~/.codex/$directory_name 폴더를 백업했습니다: $BACKUP_DIR"
   fi
 
   mkdir -p "$target_dir"
@@ -78,7 +90,9 @@ printf -- '- ~/.codex/AGENTS.md\n'
 printf -- '- ~/.codex/agents/\n'
 printf -- '- ~/.codex/skills/\n'
 printf -- '- ~/.codex/config/\n'
+printf -- '- ~/.codex/prompts/\n'
+printf -- '- ~/.codex/templates/\n'
+printf -- '- ~/.codex/docs/\n'
 printf '\n'
 printf '다음에 실행 권한이 필요하면 아래 명령을 사용하세요:\n'
 printf '  chmod +x scripts/install.sh\n'
-
