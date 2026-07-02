@@ -31,11 +31,8 @@ try {
         New-Item -ItemType Directory -Path $CodexDir | Out-Null
         Write-Success "~/.codex 폴더를 생성했습니다."
     }
-
-    $TargetSkillsDir = Join-Path $CodexDir "skills"
-    if (-not (Test-Path $TargetSkillsDir)) {
-        New-Item -ItemType Directory -Path $TargetSkillsDir | Out-Null
-        Write-Success "~/.codex/skills 폴더를 생성했습니다."
+    else {
+        Write-Success "~/.codex 폴더를 확인했습니다."
     }
 
     $SourceAgentsFile = Join-Path $RepoRoot "AGENTS.md"
@@ -54,7 +51,14 @@ try {
     Copy-Item -Path $SourceAgentsFile -Destination $TargetAgentsFile -Force
     Write-Success "AGENTS.md 파일을 설치했습니다."
 
-    $DirectoriesToCopy = @("agents", "skills", "config")
+    $DirectoriesToCopy = @(
+        "agents",
+        "skills",
+        "config",
+        "prompts",
+        "templates",
+        "docs"
+    )
 
     foreach ($DirectoryName in $DirectoriesToCopy) {
         $SourceDir = Join-Path $RepoRoot $DirectoryName
@@ -62,6 +66,12 @@ try {
 
         if (-not (Test-Path $SourceDir)) {
             throw "원본 폴더를 찾을 수 없습니다: $SourceDir"
+        }
+
+        if (Test-Path $TargetDir) {
+            $BackupDir = Join-Path $CodexDir "$DirectoryName.backup.$Timestamp"
+            Copy-Item -Path $TargetDir -Destination $BackupDir -Recurse -Force
+            Write-Success "기존 ~/.codex/$DirectoryName 폴더를 백업했습니다: $BackupDir"
         }
 
         if (-not (Test-Path $TargetDir)) {
@@ -79,6 +89,9 @@ try {
     Write-Host "- ~/.codex/agents/"
     Write-Host "- ~/.codex/skills/"
     Write-Host "- ~/.codex/config/"
+    Write-Host "- ~/.codex/prompts/"
+    Write-Host "- ~/.codex/templates/"
+    Write-Host "- ~/.codex/docs/"
 }
 catch {
     Write-Host ""
@@ -92,4 +105,3 @@ catch {
     Write-Host "- ~/.codex 폴더에 파일을 쓸 권한이 있는지 확인하세요."
     exit 1
 }
-
